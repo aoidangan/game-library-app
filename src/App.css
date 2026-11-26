@@ -1,0 +1,172 @@
+main {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 16px;
+}
+
+header {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+
+h1 {
+  font-size: 1.5rem;
+  margin: 0;
+}
+
+.count {
+  color: #888;
+  margin: 0;
+}
+
+.game-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  gap: 10px;
+}
+
+.game-card {
+  display: flex;
+  gap: 12px;
+  padding: 8px;
+  border-radius: 10px;
+  background: rgba(127, 127, 127, 0.08);
+}
+
+.game-card img {
+  width: 60px;
+  height: 80px;
+  object-fit: cover;
+  border-radius: 6px;
+  flex-shrink: 0;
+  background: rgba(127, 127, 127, 0.15);
+}
+
+.info h2 {
+  font-size: 1rem;
+  margin: 2px 0 4px;
+}
+
+.meta {
+  font-size: 0.85rem;
+  color: #888;
+  margin: 0 0 6px;
+}
+
+.tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  margin: 0;
+}
+
+.tags span {
+  font-size: 0.75rem;
+  padding: 2px 8px;
+  border-radius: 999px;
+  background: rgba(127, 127, 127, 0.15);
+}
+
+/* 오늘 뭐 하지? */
+.today {
+  margin-bottom: 14px;
+}
+
+.today-head {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.hint {
+  font-size: 0.8rem;
+  color: #888;
+}
+
+button.primary {
+  font: inherit;
+  font-weight: 600;
+  padding: 10px 16px;
+  border: none;
+  border-radius: 10px;
+  background: #4f6bed;
+  color: #fff;
+  cursor: pointer;
+}
+
+button.primary:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+
+.today-pick {
+  margin-top: 10px;
+  padding: 8px;
+  border: 2px solid #4f6bed;
+  border-radius: 12px;
+}
+
+.today-pick .game-card {
+  background: none;
+  padding: 0;
+}
+
+.summary {
+  font-size: 0.85rem;
+  margin: 8px 4px 2px;
+}
+
+/* 검색·필터 */
+.filters {
+  display: grid;
+  gap: 8px;
+  margin-bottom: 14px;
+}
+
+.filters input[type='search'],
+.filters select {
+  font: inherit;
+  padding: 8px 10px;
+  border: 1px solid rgba(127, 127, 127, 0.35);
+  border-radius: 8px;
+  background: transparent;
+  color: inherit;
+}
+
+.filters select option {
+  color: #000;
+}
+
+.filter-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+}
+
+.check {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 0.9rem;
+}
+
+button.link {
+  font: inherit;
+  font-size: 0.9rem;
+  border: none;
+  background: none;
+  color: #4f6bed;
+  cursor: pointer;
+  padding: 4px;
+}
+
+.message {
+  padding: 24px;
+  text-align: center;
+}
