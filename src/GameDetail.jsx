@@ -33,7 +33,7 @@ function screenshotsOf(game, shotsMap) {
 }
 
 // 게임 상세 화면. games.json(노션 + 진피클의 RAWG 보강 v2.1)에 있는 정보를 보여 줘요.
-function GameDetail({ game, shotsMap, onClose }) {
+function GameDetail({ game, shotsMap, favorite, hidden, onToggleFavorite, onToggleHidden, onClose }) {
   const [showOriginal, setShowOriginal] = useState(false)
 
   // Esc 키로 닫기
@@ -74,6 +74,16 @@ function GameDetail({ game, shotsMap, onClose }) {
             </p>
           </div>
         </header>
+
+        {/* 찜·숨기기는 이 기기에만 저장돼요 */}
+        <div className="detail-actions">
+          <button type="button" className={favorite ? 'on' : ''} aria-pressed={favorite} onClick={onToggleFavorite}>
+            {favorite ? '♥ 찜함' : '♡ 찜하기'}
+          </button>
+          <button type="button" className={hidden ? 'on' : ''} aria-pressed={hidden} onClick={onToggleHidden}>
+            {hidden ? '숨김 해제' : '목록에서 숨기기'}
+          </button>
+        </div>
 
         {shots.length > 0 && (
           <section className="detail-sec">

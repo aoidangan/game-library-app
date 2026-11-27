@@ -2,7 +2,7 @@ import { coverFallback } from './images.js'
 
 // 게임 하나를 보여 주는 카드. 목록과 "오늘 뭐 하지?"에서 같이 써요.
 // onOpen을 주면 카드를 눌러 상세 화면을 열 수 있어요.
-function GameCard({ game, as: Tag = 'li', onOpen }) {
+function GameCard({ game, as: Tag = 'li', favorite = false, onOpen }) {
   const body = (
     <>
       <img
@@ -12,7 +12,14 @@ function GameCard({ game, as: Tag = 'li', onOpen }) {
         onError={coverFallback(game)}
       />
       <div className="info">
-        <h2>{game.title}</h2>
+        <h2>
+          {favorite && (
+            <span className="fav-mark" aria-label="찜한 게임">
+              ♥{' '}
+            </span>
+          )}
+          {game.title}
+        </h2>
         <p className="meta">
           {game.genres.join(' · ')}
           {game.metacritic != null && ` · 메타 ${game.metacritic}`}

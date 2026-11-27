@@ -1,12 +1,21 @@
 import { useState } from 'react'
 import GameCard from './GameCard.jsx'
 
-// "오늘 뭐 하지?" — 시작 전 + 공식 한글화 + 컨트롤러 지원 게임 중에서 무작위로 하나 골라요.
+// "오늘 뭐 하지?"
+// 기본: 시작 전 + 공식 한글화 + 컨트롤러 지원 게임 중에서 무작위로 하나.
+// 찜한 게임이 있으면 "찜한 게임에서만"이 켜지고, 아직 안 끝낸 찜 게임 중에서 골라요.
+// 숨긴 게임은 어느 쪽이든 빠져요.
 const isCandidate = (g) => g.status === '시작 전' && g.koreanSupport === '공식 한글화' && g.controllerSupport
+const DONE = new Set(['엔딩 완료', '완벽 클리어', '중도 하차'])
 
-function TodayPick({ games, onOpen }) {
+function TodayPick({ games, favorites, hidden, onOpen }) {
   const [pick, setPick] = useState(null)
-  const candidates = games.filter(isCandidate)
+  const [favOnly, setFavOnly] = useState(true)
+
+  const visible = games.filter((g) => !hidden.has(g.id))
+  const favPool = visible.filter((g) => favorites.has(g.id) && !DONE.has(g.status))
+  const useFav = favOnly && favPool.length > 0
+  const candidates = useFav ? favPool : visible.filter(isCandidate)
 
   const choose = () => {
     if (candidates.length === 0) return
@@ -21,11 +30,19 @@ function TodayPick({ games, onOpen }) {
         <button type="button" className="primary" onClick={choose} disabled={candidates.length === 0}>
           🎲 오늘 뭐 하지?
         </button>
-        <span className="hint">시작 전 · 공식 한글화 · 컨트롤러 {candidates.length}개 중에서</span>
+        <span className="hint">
+          {useFav ? `♥ 찜한 게임 ${candidates.length}개 중에서` : `시작 전 · 공식 한글화 · 컨트롤러 ${candidates.length}개 중에서`}
+        </span>
+        {favPool.length > 0 && (
+          <label className="check">
+            <input type="checkbox" checked={favOnly} onChange={(e) => setFavOnly(e.target.checked)} />
+            찜한 게임에서만
+          </label>
+        )}
       </div>
       {pick && (
         <div className="today-pick">
-          <GameCard game={pick} as="div" onOpen={onOpen} />
+          <GameCard game={pick} as="div" favorite={favorites.has(pick.id)} onOpen={onOpen} />
           {pick.summary && <p className="summary">{pick.summary}</p>}
         </div>
       )}

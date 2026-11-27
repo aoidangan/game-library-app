@@ -4,11 +4,13 @@ import Filters from './Filters.jsx'
 import GameCard from './GameCard.jsx'
 import GameDetail from './GameDetail.jsx'
 import TodayPick from './TodayPick.jsx'
+import useStoredSet from './useStoredSet.js'
 
 // 상세 화면은 주소 끝의 #game=<id>로 열어요. 그래서 휴대폰 뒤로 가기로 닫혀요.
 const idFromHash = () => new URLSearchParams(window.location.hash.slice(1)).get('game')
 
-const EMPTY_FILTERS = { query: '', status: '', korean: '', controller: false, genre: '', sort: 'title' }
+// view: '' = 전체(숨긴 게임 빼고), 'favorites' = 찜한 게임만, 'hidden' = 숨긴 게임만
+const EMPTY_FILTERS = { query: '', status: '', korean: '', controller: false, genre: '', sort: 'title', view: '' }
 
 // 제목(한글·영문) 검색은 대소문자와 띄어쓰기를 무시해요.
 const normalize = (text) => (text ?? '').toLowerCase().replace(/\s+/g, '')
@@ -21,6 +23,8 @@ function App() {
   const [shotsMap, setShotsMap] = useState({})
   const [openId, setOpenId] = useState(idFromHash)
   const openedInApp = useRef(false)
+  const [favorites, toggleFavorite] = useStoredSet('game-library:favorites')
+  const [hidden, toggleHidden] = useStoredSet('game-library:hidden')
 
   useEffect(() => {
     const onHash = () => {
@@ -83,14 +87,16 @@ function App() {
         (!filters.status || g.status === filters.status) &&
         (!filters.korean || g.koreanSupport === filters.korean) &&
         (!filters.controller || g.controllerSupport) &&
-        (!filters.genre || g.genres.includes(filters.genre)),
+        (!filters.genre || g.genres.includes(filters.genre)) &&
+        (filters.view === 'hidden' ? hidden.has(g.id) : !hidden.has(g.id)) &&
+        (filters.view !== 'favorites' || favorites.has(g.id)),
     )
     if (filters.sort === 'metacritic') {
       // 점수 높은 순, 점수 없는 게임은 맨 뒤로
       return list.sort((a, b) => (b.metacritic ?? -1) - (a.metacritic ?? -1))
     }
     return list.sort((a, b) => a.title.localeCompare(b.title, 'ko'))
-  }, [games, filters])
+  }, [games, filters, favorites, hidden])
 
   if (error) return <p className="message">{error}</p>
 
@@ -103,11 +109,12 @@ function App() {
         </p>
       </header>
 
-      <TodayPick games={games} onOpen={openGame} />
+      <TodayPick games={games} favorites={favorites} hidden={hidden} onOpen={openGame} />
 
       <Filters
         filters={filters}
         options={options}
+        counts={{ favorites: favorites.size, hidden: hidden.size }}
         onChange={(patch) => setFilters((f) => ({ ...f, ...patch }))}
         onReset={() => setFilters(EMPTY_FILTERS)}
       />
@@ -117,12 +124,22 @@ function App() {
       ) : (
         <ul className="game-list">
           {shown.map((game) => (
-            <GameCard key={game.id} game={game} onOpen={openGame} />
+            <GameCard key={game.id} game={game} favorite={favorites.has(game.id)} onOpen={openGame} />
           ))}
         </ul>
       )}
 
-      {openGameData && <GameDetail game={openGameData} shotsMap={shotsMap} onClose={closeGame} />}
+      {openGameData && (
+        <GameDetail
+          game={openGameData}
+          shotsMap={shotsMap}
+          favorite={favorites.has(openGameData.id)}
+          hidden={hidden.has(openGameData.id)}
+          onToggleFavorite={() => toggleFavorite(openGameData.id)}
+          onToggleHidden={() => toggleHidden(openGameData.id)}
+          onClose={closeGame}
+        />
+      )}
     </main>
   )
 }
