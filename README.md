@@ -10,8 +10,14 @@
 - 검색: 한글·영문 제목 (대소문자·띄어쓰기 무시)
 - 필터: 진행 상태, 한글화, 장르, 컨트롤러 지원만 / 정렬: 이름순, 메타크리틱 높은 순
 - "🎲 오늘 뭐 하지?": 시작 전 + 공식 한글화 + 컨트롤러 지원 게임(127개) 중 무작위 1개
-- `public/games.json`: 진피클이 노션에서 뽑은 295개 (2026-11-27에 넣음)
-- 표지가 없는 게임: Train Sim World ® 6 (빈칸으로 보여요)
+- 상세 화면 (2026-11-27 저녁): 카드를 누르면 아래에서 올라와요. 주소가 `#game=<id>`로 바뀌어서 휴대폰 뒤로 가기·Esc로 닫혀요.
+  - 표지 · 영문 제목 · 스크린샷(옆으로 넘기기) · 메타크리틱 · 이용자 평점(RAWG ★/5, 평가 수)
+  - 소개(노션 한글 한 줄) + 영어 원문 펼치기 · 특징 · 장르 · 평균 플레이타임 · 출시일 · 개발사 · 연령 등급 · 추가일 · 노션 링크
+  - 하단에 RAWG 출처 표기
+- `public/games.json`: **v2.1** — 노션 15개 필드 + 진피클이 RAWG에서 보강한 14개 필드(295개 중 291개 매칭, 평점 250개)
+- 스크린샷: Steam 것(앱에 포함, 284게임)을 먼저 쓰고, 없으면 RAWG 스크린샷(인터넷 필요)
+- 표지가 없는 Train Sim World ® 6은 RAWG 배경 이미지로 대신 보여요
+- RAWG에서도 못 찾은 4개(스크린샷·평점 없음): Steampunks Vs Skeletons, Evergreen Valley, NightReaper2, Typers Combat
 
 ## 실행
 ```
@@ -33,6 +39,9 @@ npm run dev
 | `src/Filters.jsx` | 검색창, 필터, 정렬 |
 | `src/GameCard.jsx` | 게임 카드 하나 |
 | `src/TodayPick.jsx` | "오늘 뭐 하지?" 버튼 |
+| `src/GameDetail.jsx` | 상세 화면 |
+| `src/images.js` | RAWG 이미지 작게 줄이기, 표지 대체 이미지 |
+| `public/shots/s<번호>.webp`, `shots_map.json` | Steam 스크린샷 284게임 x 4장 (4게임씩 한 장에 묶음, `../epic-archivist/notion-web`에서 복사) |
 | `src/App.css`, `src/index.css` | 화면 꾸미기 |
 | `public/games.json` | 게임 데이터 (진피클이 노션에서 뽑은 파일, 필드 15개) |
 | `public/covers/<Epic ID>.webp` | 표지 294장 (`../epic-archivist/notion-web/covers`에서 복사) |
@@ -40,5 +49,7 @@ npm run dev
 | `vite.config.js` | 배포 경로(`/game-library-app/`)와 PWA 설정 |
 
 ## 다음 단계
-1. 상세 화면 (한 줄 소개, 특징, 노션 링크)
-2. 노션과 바로 연결해서 games.json 자동 갱신
+1. RAWG 영어 설명의 한글 요약 (진피클)
+2. 찜·숨기기 (폰 저장) + "오늘 뭐 하지?"에서 찜 우선
+3. 같이 할 게임 필터, 플레이 시간 반영 "오늘 뭐 하지?" (다음 라운드)
+4. 노션과 바로 연결해서 games.json 자동 갱신

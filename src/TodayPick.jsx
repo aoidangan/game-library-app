@@ -4,7 +4,7 @@ import GameCard from './GameCard.jsx'
 // "오늘 뭐 하지?" — 시작 전 + 공식 한글화 + 컨트롤러 지원 게임 중에서 무작위로 하나 골라요.
 const isCandidate = (g) => g.status === '시작 전' && g.koreanSupport === '공식 한글화' && g.controllerSupport
 
-function TodayPick({ games }) {
+function TodayPick({ games, onOpen }) {
   const [pick, setPick] = useState(null)
   const candidates = games.filter(isCandidate)
 
@@ -25,7 +25,7 @@ function TodayPick({ games }) {
       </div>
       {pick && (
         <div className="today-pick">
-          <GameCard game={pick} as="div" />
+          <GameCard game={pick} as="div" onOpen={onOpen} />
           {pick.summary && <p className="summary">{pick.summary}</p>}
         </div>
       )}

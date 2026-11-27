@@ -34,6 +34,22 @@ export default defineConfig(({ command, isPreview }) => ({
             handler: 'CacheFirst',
             options: { cacheName: 'covers', expiration: { maxEntries: 400 } },
           },
+          {
+            // 스크린샷 묶음(장당 약 300KB)은 상세 화면에서 본 것만 저장해요.
+            urlPattern: ({ url }) => url.pathname.includes('/shots/') && url.pathname.endsWith('.webp'),
+            handler: 'CacheFirst',
+            options: { cacheName: 'shots', expiration: { maxEntries: 80 } },
+          },
+          {
+            // RAWG 이미지(Steam 스크린샷이 없는 게임용)도 본 것만 저장해요.
+            urlPattern: ({ url }) => url.hostname === 'media.rawg.io',
+            handler: 'CacheFirst',
+            options: {
+              cacheName: 'rawg',
+              expiration: { maxEntries: 200 },
+              cacheableResponse: { statuses: [0, 200] },
+            },
+          },
         ],
       },
     }),
